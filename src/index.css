@@ -6,10 +6,6 @@
   text-align: center;
 }
 
-body {
-  margin-top: 10%;
-}
-
 ul {
   list-style: none;
 }
@@ -18,16 +14,44 @@ ul {
   content: "";
   clear: both;
   display: table;
-} 
+}
 
 .container {
   padding: 0 7em;
+  margin-top: 10vh;
+  margin-bottom: 1em;
+}
+
+/** Keeps footer at the bottom of the page if there isn't enough content **/
+.no-footer-content {
+  min-height: calc(90vh - 6em);
+}
+
+@media (max-width: 850px) {
+  .container {
+    padding: 0 3em;
+  }
+  .no-footer-content {
+    min-height: calc(90vh - 5em);
+  }
+}
+
+@media (max-width: 550px) {
+  .container {
+    margin-top: 0;
+  }
+  .container {
+    padding: 0 0em;
+  }
+  .no-footer-content {
+    min-height: calc(100vh - 5em);
+  }
 }
 
 /* Buttons Section */
 
 .button {
-  padding: .75em 5em;
+  padding: 0.75em 5em;
   color: #fff;
   background-color: rgb(0, 31, 38);
   border: 2px rgb(0, 31, 38) solid;
@@ -35,19 +59,26 @@ ul {
   font-size: 1em;
   font-weight: 600;
   cursor: pointer;
-  
 }
 
 .button:hover {
-  transition: .25s;
+  transition: 0.25s;
   background-color: #fff;
   color: rgb(0, 31, 38);
 }
 
-/* Popup Section */
+@media (max-width: 550px) {
+  .button {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75em 0;
+  }
+}
+
+/* FormPopup and EndQuizPopup Section*/
+
 .popup-container {
   position: absolute;
-  display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -55,7 +86,7 @@ ul {
   top: 0%;
   left: 0%;
   z-index: 4;
-  background-color: rgba(0, 0, 0, .5);
+  background-color: rgba(0, 0, 0, 0.5);
   font-size: 1.25em;
 }
 
@@ -63,33 +94,58 @@ ul {
   z-index: 2;
   background-color: #fff;
   border-radius: 10px;
-  min-width: 32em;
 }
-
-.popup p:first-of-type {
-  margin-top: 1.5em;
-}
-
-.popup p:last-of-type {
-  margin-bottom: .75em;
-}
-
-.popup p {
-  line-height: 1.5em;
-  margin: .5em 1.5em;
-}
-
 
 .popup-header {
   background-color: rgb(0, 111, 136);
   color: #fff;
-  padding: .5em;
+  padding: 0.5em;
   font-size: 2em;
   border-radius: 10px 10px 0 0;
-
 }
 
+.popup-content {
+  margin: 1em 2em 0;
+}
 
+.popup p:last-of-type {
+  margin-bottom: 0.75em;
+}
+
+.popup p {
+  line-height: 1.25em;
+  margin: 0.5em 0;
+}
+.quiz-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-question {
+  width: 100%;
+  text-align: left;
+}
+.form-input {
+  text-align: left;
+  height: 25px;
+  margin: 5px 0 10px;
+}
+
+@media (max-width: 850px) {
+  .popup {
+    font-size: 0.8em;
+  }
+}
+
+@media (max-width: 550px) {
+  .popup {
+    font-size: 0.65em;
+  }
+
+  .popup.end-popup {
+    font-size: 0.8em;
+  }
+}
 
 /* Question Section */
 .question {
@@ -97,7 +153,6 @@ ul {
   background-color: rgb(0, 111, 136);
   color: #fff;
 }
-
 
 /* Answer Section */
 
@@ -107,14 +162,19 @@ ul {
   margin-top: 2em;
 }
 
+.answers ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .answer-option {
   display: flex;
-  float: left;
   width: 48%;
   border: 2px rgb(0, 111, 136) solid;
   margin-top: 2em;
   cursor: pointer;
-  transition: .25s all;
+  transition: 0.25s transform;
   transform: scale(1);
 }
 
@@ -122,13 +182,11 @@ ul {
   transform: scale(1.03);
 }
 
-
-.answer-option:nth-child(even) {
-  float: right;
+.even-answer {
+  margin-left: 1em;
 }
 
 .answer-sidebar {
-  float: left;
   width: 20%;
   background-color: rgb(0, 111, 136);
   color: #fff;
@@ -139,12 +197,26 @@ ul {
 }
 
 .answer-main {
-  float: left;
   width: 80%;
   padding: 1em;
   font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+@media (max-width: 550px) {
+  .answers {
+    margin: 0em 1em;
+  }
+  .answer-option {
+    width: 100%;
+  }
+
+  .even-answer {
+    margin-left: 0;
+  }
+}
 
 /** Changes color if answer selected is right or wrong **/
 .right {
@@ -172,24 +244,34 @@ ul {
   margin-top: 2em;
 }
 
-/* Footer Section */ 
+@media (max-width: 550px) {
+  .next-button-container {
+    margin: 2em 1em 0;
+  }
+}
+/* Footer Section */
 .footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 1.5em;
+  position: relative;
   text-align: center;
   background-color: rgb(0, 111, 136);
   color: #fff;
+  height: 5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.footer p {
+  line-height: 1.25em;
 }
 
 .footer a {
   color: #fff;
 }
 
-
-
-
-
-
+@media (max-width: 850px) {
+  .footer {
+    font-size: 0.8em;
+  }
+}

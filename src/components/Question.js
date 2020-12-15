@@ -7,7 +7,7 @@ function Question({ dataset, currentDataIndex }) {
         Question {currentDataIndex + 1}/{dataset.length}
       </h2>
       <br />
-      <p>{dataset[currentDataIndex].question}</p>
+      <p className="question-element">{dataset[currentDataIndex].question}</p>
     </div>
   );
 }

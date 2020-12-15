@@ -4,11 +4,11 @@ function Footer() {
   return (
     <footer className="footer">
       <p>
-        The purpose of this project is for me to code and get used to using
-        react.js
+        Built using <a href="https://reactjs.org/">react.js</a>
       </p>
       <p>
-        Built using <a href="https://reactjs.org/">react.js</a>
+        Api being used is{" "}
+        <a href="https://opentdb.com/api_config.php">Open Trivia Database</a>
       </p>
     </footer>
   );

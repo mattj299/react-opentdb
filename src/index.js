@@ -1,28 +1,22 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import data from "./data/data";
-import Popup from "./components/Popup";
+import FormPopup from "./components/FormPopup";
+import EndQuizPopup from "./components/EndQuizPopup";
 import Question from "./components/Question";
 import Answers from "./components/Answers";
 import NextButton from "./components/NextButton";
 import Footer from "./components/Footer";
 
 function App() {
-  const [quizStarted, setQuizStarted] = useState(false);
-  const [displayPopup, setDisplayPopup] = useState(true);
+  const [displayPopup, setDisplayPopup] = useState(false);
   const [displayNextButton, setDisplayNextButton] = useState(false);
   const [currentDataIndex, setCurrentDataIndex] = useState(0);
-  const [dataset, setDataset] = useState(data);
   const [answeredCorrect, setAnsweredCorrect] = useState(0);
+  const [dataset, setDataset] = useState(null);
 
-  const handlePopupChange = () => {
-    if (!quizStarted) {
-      setQuizStarted(true);
-      setDisplayPopup(!displayPopup);
-    } else {
-      window.location.reload(); // restart the application
-    }
+  const restartQuiz = () => {
+    window.location.reload(); // restart the application
   };
 
   const handleAnswerClick = (e) => {
@@ -45,18 +39,21 @@ function App() {
       setAnsweredCorrect(answeredCorrect + 1);
     } else {
       item.classList.add("wrong");
+      // Displays the correct answer
+      const list = document.querySelectorAll("li");
+      const correct = list[correctAnswer];
+      correct.classList.add("right");
 
       setDisplayNextButton(!displayNextButton);
     }
   };
 
   const handleNextButtonClick = () => {
-    // removes class of the element with one of these classes
+    // removes class if an element contains that class, if no element contains that class then variable returns null
     const rightClass = document.querySelector(".right");
     const wrongClass = document.querySelector(".wrong");
-    rightClass
-      ? rightClass.classList.remove("right")
-      : wrongClass.classList.remove("wrong");
+    if (wrongClass !== null) wrongClass.classList.remove("wrong");
+    if (rightClass !== null) rightClass.classList.remove("right");
 
     // handles next button click
     const dataIndexLength = dataset.length - 1;
@@ -69,12 +66,21 @@ function App() {
     }
   };
 
+  // If dataset is null then only display FormPopup so user can choose difficulty, etc of the quiz
+  if (dataset === null)
+    return (
+      <>
+        <div className="container no-footer-content">
+          <FormPopup setDataset={setDataset} />
+        </div>
+        <Footer />
+      </>
+    );
   return (
-    <div className="app">
-      <div className="container">
-        <Popup
-          quizStarted={quizStarted}
-          handlePopupChange={handlePopupChange}
+    <>
+      <div className="container no-footer-content">
+        <EndQuizPopup
+          restartQuiz={restartQuiz}
           displayPopup={displayPopup}
           dataset={dataset}
           answeredCorrect={answeredCorrect}
@@ -91,9 +97,9 @@ function App() {
           dataset={dataset}
           currentDataIndex={currentDataIndex}
         />
-        <Footer />
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }
 
