@@ -1,5 +1,4 @@
-// This functions gets used in FormPopup
-// This has it's own file because it shortens FormPopup and has less confusion on what's happening with this function
+// This functions gets used in FormPopup and has a file because it shortens FormPopup / has less confusion on what's happening
 async function organizedData(data, responseCode) {
   // Put data into an array with each being an object of it's question, answers, and answerUsingIndex
   const organizedData = [];
@@ -19,6 +18,7 @@ async function organizedData(data, responseCode) {
     const question = parser.parseFromString(codedQuestion, "text/html").body
       .textContent;
 
+    // Get correct & incorrect answers, put into array, shuffle, change to normal characters instead of html special characters with parser
     const incorrectAnswers = item.incorrect_answers;
     const correctAnswer = item.correct_answer;
     const allAnswers = [...incorrectAnswers, correctAnswer];
@@ -32,6 +32,7 @@ async function organizedData(data, responseCode) {
       (answer) => answer === correctAnswer
     );
 
+    // Create object and push into organizedData array, returning dataItem does nothing but take off warning in console
     const dataItem = {
       question,
       answers,
@@ -41,6 +42,7 @@ async function organizedData(data, responseCode) {
     return dataItem;
   });
 
+  // returns array full of objects (^like dataItem being returned above) and responseCode number
   return { organizedData, responseCode };
 }
 

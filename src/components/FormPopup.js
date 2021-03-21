@@ -22,6 +22,7 @@ function FormPopup({ setDataset }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
+    // useEffect runs this function which fetch's the api and sets the categories in categories state to be used when user decides what Q to have
     async function categories() {
       const categoriesResponse = await fetch(
         "https://opentdb.com/api_category.php"
@@ -34,11 +35,12 @@ function FormPopup({ setDataset }) {
     categories();
   }, []);
 
+  // Called every time user changes category, amount of questions, and difficulty
   const onChange = (e) => {
     dispatch({ field: e.target.name, value: e.target.value });
   };
 
-  // Submits the form and fetch's the questions that are going to be used for the quiz
+  // Submits the form and fetch's the questions that are going to be used for the quiz, gets amount of questions, category, and difficulty user chose
   const submitForm = (e) => {
     e.preventDefault();
     async function fetchingDataset() {
@@ -49,10 +51,11 @@ function FormPopup({ setDataset }) {
       const category =
         state.category === "any-category" ? "" : `&category=${state.category}`;
 
-      // In case user types a decimal into the input
+      // In case user types a decimal into the input or negative
       const questionsRounded = Math.round(state.questions);
       const amountOfQuestions = questionsRounded <= 0 ? "10" : questionsRounded;
 
+      // Fetch's data to determine the quiz
       const determineQuiz = await fetch(
         `https://opentdb.com/api.php?amount=${amountOfQuestions}${difficulty}${category}&type=multiple`
       );
@@ -63,7 +66,7 @@ function FormPopup({ setDataset }) {
       // Number used to see if api call was succesful or error. Check documentation for possible responses.
       const responseCode = quiz.response_code;
 
-      // If statement is true, retrieve the amount of questions in the category that was chosen to display to the user
+      // If statement is true, user asked for too many questions or api isn't working, sets amount of questions per difficulty to display to user
       if (category !== "" && responseCode !== 0) {
         const categoryQuestions = await fetch(
           `https://opentdb.com/api_count.php?${category}`
@@ -79,6 +82,7 @@ function FormPopup({ setDataset }) {
         });
       }
 
+      // Waits for organizedData which is a function, 2 arguments, shuffles questions, returns responseCode and shuffled answers with index of answer
       const newData = await organizedData(data, responseCode);
       if (responseCode !== 0) {
         setApiResponseCode(responseCode);
@@ -91,7 +95,9 @@ function FormPopup({ setDataset }) {
 
   const { category, difficulty, questions } = state;
 
+  // When page opens and fetch is happening
   if (categories === null) return <h1>Loading...</h1>;
+  // Happens when user asks for too many questions or api fails to retrieve categories and questions
   else if (apiResponseCode) {
     const { total, easy, medium, hard } = questionsPerCategory;
     return (
@@ -115,6 +121,8 @@ function FormPopup({ setDataset }) {
       </div>
     );
   }
+
+  // Returns when everything works
   return (
     <div style={{ display: "flex" }} className="popup-container">
       <div className="container">
