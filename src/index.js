@@ -76,6 +76,8 @@ function App() {
         <Footer />
       </>
     );
+
+  // When dataset is not null then display everything needed to start the test
   return (
     <>
       <div className="container no-footer-content">
