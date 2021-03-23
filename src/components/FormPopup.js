@@ -51,13 +51,72 @@ function FormPopup({ setDataset }) {
       const category =
         state.category === "any-category" ? "" : `&category=${state.category}`;
 
-      // In case user types a decimal into the input or negative
-      const questionsRounded = Math.round(state.questions);
-      const amountOfQuestions = questionsRounded <= 0 ? "10" : questionsRounded;
+      // Declare early so later can be used in multiple scopes
+      let questions, total, easy, medium, hard;
+
+      // Only runs if a category is specified
+      if (category) {
+        // In case user types a decimal into the input or negative
+        let questionsRounded = Math.round(state.questions);
+        const forceAboveZero = questionsRounded <= 0 ? "10" : questionsRounded;
+        questions = forceAboveZero;
+
+        // Fetch categories and json them, then shorthand data
+        const categoryQuestions = await fetch(
+          `https://opentdb.com/api_count.php?${category}`
+        );
+        const categoryQJSON = await categoryQuestions.json();
+        const categoryQuestionCount = categoryQJSON.category_question_count;
+
+        // Set so it can be used in the switch/case
+        total = categoryQuestionCount.total_question_count;
+        easy = categoryQuestionCount.total_easy_question_count;
+        medium = categoryQuestionCount.total_medium_question_count;
+        hard = categoryQuestionCount.total_hard_question_count;
+
+        // If user asks for too many questions it switches the amount asked for the max amount in the category and difficulty chosen by the user if specified
+        // states difficulty is text and each posssibility is a case, code above is #'s in order to set the questions variable to #'s,
+        // If user doesn't ask for too many questions, nothing happens, default is no difficulty specified
+        switch (state.difficulty) {
+          case "easy":
+            if (questions > easy) {
+              questions = easy;
+            }
+            break;
+          case "medium":
+            if (questions > medium) {
+              questions = medium;
+            }
+            break;
+          case "hard":
+            if (questions > hard) {
+              questions = hard;
+            }
+            break;
+          default:
+            if (questions > total) {
+              questions = total;
+            }
+            break;
+        }
+
+        // Set the state so it can be used in a return to display # of questions in case api call fails
+        setQuestionsPerCategory({
+          total: categoryQuestionCount.total_question_count,
+          easy: categoryQuestionCount.total_easy_question_count,
+          medium: categoryQuestionCount.total_medium_question_count,
+          hard: categoryQuestionCount.total_hard_question_count,
+        });
+      } else {
+        // In case user types a decimal into the input or negative
+        let questionsRounded = Math.round(state.questions);
+        const forceAboveZero = questionsRounded <= 0 ? "10" : questionsRounded;
+        questions = forceAboveZero;
+      }
 
       // Fetch's data to determine the quiz
       const determineQuiz = await fetch(
-        `https://opentdb.com/api.php?amount=${amountOfQuestions}${difficulty}${category}&type=multiple`
+        `https://opentdb.com/api.php?amount=${questions}${difficulty}${category}&type=multiple`
       );
 
       const quiz = await determineQuiz.json();
@@ -66,27 +125,14 @@ function FormPopup({ setDataset }) {
       // Number used to see if api call was succesful or error. Check documentation for possible responses.
       const responseCode = quiz.response_code;
 
-      // If statement is true, user asked for too many questions or api isn't working, sets amount of questions per difficulty to display to user
-      if (category !== "" && responseCode !== 0) {
-        const categoryQuestions = await fetch(
-          `https://opentdb.com/api_count.php?${category}`
-        );
-        const questionsInCategory = await categoryQuestions.json();
-        const categoryQuestionCount =
-          questionsInCategory.category_question_count;
-        setQuestionsPerCategory({
-          total: categoryQuestionCount.total_question_count,
-          easy: categoryQuestionCount.total_easy_question_count,
-          medium: categoryQuestionCount.total_medium_question_count,
-          hard: categoryQuestionCount.total_hard_question_count,
-        });
-      }
-
       // Waits for organizedData which is a function, 2 arguments, shuffles questions, returns responseCode and shuffled answers with index of answer
       const newData = await organizedData(data, responseCode);
+      // If error occurs, set state so it returns the correct error page
       if (responseCode !== 0) {
         setApiResponseCode(responseCode);
-      } else {
+      }
+      // Otherwise call setDataset which is a prop received from index.js to start the quiz
+      else {
         setDataset(newData.organizedData);
       }
     }
@@ -117,7 +163,15 @@ function FormPopup({ setDataset }) {
         <br />
         <p>{hard} hard questions.</p>
         <br />
-        <p>Please refresh the browser and try again.</p>
+        <p>
+          The amount of questions displayed here could be wrong, if wanting max
+          # of questions but doesn't work try lowering the number in your quiz.
+        </p>
+        <br />
+        <p>
+          Please click <a href="/">here</a> to refresh the browser and try
+          again.
+        </p>
       </div>
     );
   }
@@ -132,7 +186,7 @@ function FormPopup({ setDataset }) {
             <p>This is a quiz application built using ReactJS.</p>
             <p>Here you decide what your quiz will be about</p>
             <p>It will load question and answer pairs into the component.</p>
-            <p>A maximum of 50 questions can be returned per quiz</p>
+            <p>A max of 50 questions can be returned per quiz</p>
             <form className="quiz-form" onSubmit={submitForm}>
               <label className="form-question">
                 Select number of questions:
@@ -143,6 +197,8 @@ function FormPopup({ setDataset }) {
                 name="questions"
                 value={questions}
                 onChange={onChange}
+                max="50"
+                min="0"
               />
 
               <label className="form-question">Select a category:</label>
