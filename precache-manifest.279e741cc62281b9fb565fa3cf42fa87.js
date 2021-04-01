@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "79b96e0de591f93f33ad4218f66f2cc8",
+    "revision": "a034128fbb2d54ae0c7cadf96236245d",
     "url": "/react-quiz-opentdb-api/index.html"
   },
   {
