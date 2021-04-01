@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/react-quiz-opentdb-api/static/css/main.2eaf904b.chunk.css",
+    "main.js": "/react-quiz-opentdb-api/static/js/main.d136ae46.chunk.js",
+    "main.js.map": "/react-quiz-opentdb-api/static/js/main.d136ae46.chunk.js.map",
+    "runtime-main.js": "/react-quiz-opentdb-api/static/js/runtime-main.b0f6dbcf.js",
+    "runtime-main.js.map": "/react-quiz-opentdb-api/static/js/runtime-main.b0f6dbcf.js.map",
+    "static/js/2.f838f255.chunk.js": "/react-quiz-opentdb-api/static/js/2.f838f255.chunk.js",
+    "static/js/2.f838f255.chunk.js.map": "/react-quiz-opentdb-api/static/js/2.f838f255.chunk.js.map",
+    "index.html": "/react-quiz-opentdb-api/index.html",
+    "precache-manifest.99704686e9df7f385042fc7385da1742.js": "/react-quiz-opentdb-api/precache-manifest.99704686e9df7f385042fc7385da1742.js",
+    "service-worker.js": "/react-quiz-opentdb-api/service-worker.js",
+    "static/css/main.2eaf904b.chunk.css.map": "/react-quiz-opentdb-api/static/css/main.2eaf904b.chunk.css.map",
+    "static/js/2.f838f255.chunk.js.LICENSE.txt": "/react-quiz-opentdb-api/static/js/2.f838f255.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b0f6dbcf.js",
+    "static/js/2.f838f255.chunk.js",
+    "static/css/main.2eaf904b.chunk.css",
+    "static/js/main.d136ae46.chunk.js"
+  ]
+}
