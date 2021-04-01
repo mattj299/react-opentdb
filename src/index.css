@@ -20,6 +20,8 @@ ul {
   padding: 0 7em;
   margin-top: 10vh;
   margin-bottom: 1em;
+  max-width: 1250px;
+  margin: 10vh auto 1em;
 }
 
 /** Keeps footer at the bottom of the page if there isn't enough content **/
