@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/react-quiz-opentdb-api/precache-manifest.99704686e9df7f385042fc7385da1742.js"
+  "/react-quiz-opentdb-api/precache-manifest.0a7cbf07c687dd23fe3e0a04f34f02df.js"
 );
 
 self.addEventListener('message', (event) => {
